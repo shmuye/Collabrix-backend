@@ -1,6 +1,6 @@
 import { IsEmail, IsEnum, IsNotEmpty } from "class-validator";
 import { Role } from "@prisma/client";
-export class AuthDto {
+export class signupDto {
     name: string;
 
     @IsEmail()
