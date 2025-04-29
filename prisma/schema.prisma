@@ -13,35 +13,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  hash      String
-  hashedRt  String?
-  name      String?
-  role      Role
-  profile   Profile?
-  projects  Project[] @relation("ProfessorProjects")
-  applications Application[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  hash         String
+  hashedRt     String?
+  name         String?
+  role         Role
+  profile      Profile?
+  projects     Project[]     @relation("ProfessorProjects")
+  applications Application[] @relation("StudentApplications") // added relation name
 }
 
 model Profile {
-  id         Int     @id @default(autoincrement())
-  userId     Int     @unique
-  department String?
-  interests  String?
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  department   String?
+  interests    String?
   publications String?
-  user       User    @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model Project {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String
-  requirements String?
-  deadline    DateTime?
-  professorId Int
-  professor   User         @relation("ProfessorProjects", fields: [professorId], references: [id])
-  applications Application[]
+  id            Int           @id @default(autoincrement())
+  title         String
+  description   String
+  requirements  String[]
+  startDate     DateTime
+  endDate       DateTime
+  deadline      DateTime
+  professorId   Int
+  professor     User          @relation("ProfessorProjects", fields: [professorId], references: [id])
+  applications  Application[] @relation("ProjectApplications") // relation to applications
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Application {
@@ -49,8 +53,9 @@ model Application {
   studentId  Int
   projectId  Int
   status     ApplicationStatus @default(PENDING)
-  student    User     @relation(fields: [studentId], references: [id])
-  project    Project  @relation(fields: [projectId], references: [id])
+
+  student    User     @relation("StudentApplications", fields: [studentId], references: [id]) // connect back to User
+  project    Project  @relation("ProjectApplications", fields: [projectId], references: [id]) // connect back to Project
 }
 
 enum Role {
