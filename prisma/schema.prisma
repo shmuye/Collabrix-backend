@@ -19,6 +19,9 @@ model User {
   hashedRt     String?
   name         String?
   role         Role
+  bio          String?
+  skills       String[] @default([])
+  researchInterests      String?
   profile      Profile?
   projects     Project[]     @relation("ProfessorProjects")
   applications Application[] @relation("StudentApplications") // added relation name

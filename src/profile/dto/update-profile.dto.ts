@@ -13,6 +13,10 @@ export class UpdateProfileDto {
 
     @IsOptional()
     @IsString()
+    bio?: string
+
+    @IsOptional()
+    @IsString()
     researchInterests?: string; // For PROFESSOR
 
     @IsOptional()
