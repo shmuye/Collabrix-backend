@@ -12,14 +12,19 @@ export class ProjectController {
 
     @Post()
     @Roles(Role.PROFESSOR)
-    create(@Body() createProjectDto: CreateProjectDto, @getCurrentUserId() userId: number) {
-        const professorId = userId; // Get from JWT
+    create(@Body() createProjectDto: CreateProjectDto, @getCurrentUserId() professorId: number) {
         return this.projectService.create(createProjectDto, professorId);
     }
 
     @Get()
     findAll() {
         return this.projectService.findAll();
+    }
+
+    @Get('me')
+    @Roles(Role.PROFESSOR)
+    getMyProjects(@getCurrentUserId() userId: number) {
+        return this.projectService.findMyProjects(userId);
     }
 
     @Get(':id')
@@ -29,8 +34,8 @@ export class ProjectController {
 
     @Patch(':id')
     @Roles(Role.PROFESSOR)
-    update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto, @Request() req: any) {
-        const professorId = req.user.id;
+    update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto, @getCurrentUserId() professorId: number) {
+
         return this.projectService.update(+id, updateProjectDto, professorId);
     }
 
@@ -39,4 +44,11 @@ export class ProjectController {
     remove(@Param('id') id: string) {
         return this.projectService.remove(+id);
     }
+
+    @Delete('me/:id')
+    @Roles(Role.PROFESSOR)
+    deleteOwnProject(@Param('id') id: string, @getCurrentUserId() userId: number) {
+        return this.projectService.deleteOwnProject(+id, userId);
+    }
+
 }

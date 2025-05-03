@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateApplicationDto } from './dto';
 import { ApplicationStatus } from '@prisma/client';
 
 @Injectable()
@@ -32,18 +31,47 @@ export class ApplicationService {
         });
     }
 
-    async getProjectApplications(projectId: number) {
+    async getProjectApplications(projectId: number, professorId: number) {
+        const project = await this.prisma.project.findUnique({
+            where: { id: projectId },
+        });
+
+        if (!project) {
+            throw new NotFoundException('Project not found');
+        }
+
+        if (project.professorId !== professorId) {
+            throw new ForbiddenException('Forbidden: You can only view applications for your own projects');
+        }
+
         return this.prisma.application.findMany({
             where: { projectId },
             include: { student: true },
         });
     }
 
-    async updateStatus(applicationId: number, status: ApplicationStatus) {
+
+    async updateStatus(applicationId: number, status: ApplicationStatus, professorId: number) {
+        const application = await this.prisma.application.findUnique({
+            where: { id: applicationId },
+            include: {
+                project: true, // Include project to access professorId
+            },
+        });
+
+        if (!application) {
+            throw new NotFoundException('Application not found');
+        }
+
+        if (application.project.professorId !== professorId) {
+            throw new ForbiddenException('Forbidden: You can only update applications for your own projects');
+        }
+
         return this.prisma.application.update({
             where: { id: applicationId },
             data: { status },
         });
     }
+
 }
 

@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { signupDto, signinDto } from './dto';
 import { Tokens } from './types';
 import { getCurrentUser, getCurrentUserId, Public } from 'src/common/decorators';
+import { RtGuard } from 'src/common/guards/rt.guard';
 
 
 @Controller('auth')
@@ -31,6 +32,7 @@ export class AuthController {
     }
 
     @Public()
+    @UseGuards(RtGuard)
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
     refreshTokens(@getCurrentUserId() userId: number,

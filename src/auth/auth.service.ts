@@ -1,4 +1,4 @@
-import { Body, ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { signinDto, signupDto } from './dto';
 import * as bcrypt from 'bcrypt';

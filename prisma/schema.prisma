@@ -21,10 +21,10 @@ model User {
   role         Role
   bio          String?
   skills       String[] @default([])
-  researchInterests      String?
+  researchInterests String?
   profile      Profile?
   projects     Project[]     @relation("ProfessorProjects")
-  applications Application[] @relation("StudentApplications") // added relation name
+  applications Application[] @relation("StudentApplications")
 }
 
 model Profile {
@@ -33,7 +33,7 @@ model Profile {
   department   String?
   interests    String?
   publications String?
-  user         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Project {
@@ -45,8 +45,8 @@ model Project {
   endDate       DateTime
   deadline      DateTime
   professorId   Int
-  professor     User          @relation("ProfessorProjects", fields: [professorId], references: [id])
-  applications  Application[] @relation("ProjectApplications") // relation to applications
+  professor     User          @relation("ProfessorProjects", fields: [professorId], references: [id], onDelete: Cascade)
+  applications  Application[] @relation("ProjectApplications")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 }
@@ -57,8 +57,8 @@ model Application {
   projectId  Int
   status     ApplicationStatus @default(PENDING)
 
-  student    User     @relation("StudentApplications", fields: [studentId], references: [id]) // connect back to User
-  project    Project  @relation("ProjectApplications", fields: [projectId], references: [id]) // connect back to Project
+  student    User     @relation("StudentApplications", fields: [studentId], references: [id], onDelete: Cascade)
+  project    Project  @relation("ProjectApplications", fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
@@ -72,3 +72,4 @@ enum ApplicationStatus {
   APPROVED
   REJECTED
 }
+

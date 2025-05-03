@@ -17,19 +17,27 @@ export class ApplicationController {
 
     @Get()
     @Roles(Role.STUDENT)
-    getStudentApplications(@Request() req) {
-        return this.applicationService.getStudentApplications(req.user.id);
+    getStudentApplications(@getCurrentUserId() studentId: number) {
+        return this.applicationService.getStudentApplications(studentId);
     }
 
     @Get('project/:projectId')
     @Roles(Role.PROFESSOR)
-    getProjectApplications(@Param('projectId') projectId: string) {
-        return this.applicationService.getProjectApplications(+projectId);
+    getProjectApplications(
+        @Param('projectId') projectId: string,
+        @getCurrentUserId() professorId: number
+    ) {
+        return this.applicationService.getProjectApplications(+projectId, professorId);
     }
 
     @Patch(':id')
     @Roles(Role.PROFESSOR)
-    updateStatus(@Param('id') id: string, @Body('status') status: ApplicationStatus) {
-        return this.applicationService.updateStatus(+id, status);
+    updateStatus(
+        @Param('id') id: string,
+        @Body('status') status: ApplicationStatus,
+        @getCurrentUserId() professorId: number
+    ) {
+        return this.applicationService.updateStatus(+id, status, professorId);
     }
+
 }
