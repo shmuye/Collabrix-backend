@@ -73,5 +73,41 @@ export class ApplicationService {
         });
     }
 
+    // application.service.ts
+
+    async getParticipants(projectId: number) {
+        return this.prisma.application.findMany({
+            where: {
+                projectId,
+                status: 'APPROVED',
+            },
+            include: {
+                student: true, // Assuming relation exists
+            },
+        });
+    }
+
+    async removeParticipant(projectId: number, studentId: number) {
+        const application = await this.prisma.application.findFirst({
+            where: {
+                projectId,
+                studentId,
+            },
+        });
+
+        if (!application) {
+            throw new NotFoundException('Participant not found in this project.');
+        }
+
+        return this.prisma.application.deleteMany({
+            where: {
+                projectId,
+                studentId,
+            },
+        });
+    }
+
+
+
 }
 

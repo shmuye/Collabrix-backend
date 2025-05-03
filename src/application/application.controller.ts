@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Request, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Patch, Delete, ParseIntPipe } from '@nestjs/common';
 import { ApplicationService } from './application.service';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role, ApplicationStatus } from '@prisma/client';
@@ -38,6 +38,22 @@ export class ApplicationController {
         @getCurrentUserId() professorId: number
     ) {
         return this.applicationService.updateStatus(+id, status, professorId);
+    }
+
+
+    @Get('participants/:projectId')
+    @Roles(Role.PROFESSOR)
+    getParticipants(@Param('projectId', ParseIntPipe) projectId: number) {
+        return this.applicationService.getParticipants(projectId);
+    }
+
+    @Delete('participants/:projectId/:studentId')
+    @Roles(Role.PROFESSOR)
+    removeParticipant(
+        @Param('projectId', ParseIntPipe) projectId: number,
+        @Param('studentId', ParseIntPipe) studentId: number,
+    ) {
+        return this.applicationService.removeParticipant(projectId, studentId);
     }
 
 }

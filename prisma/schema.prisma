@@ -16,6 +16,8 @@ model User {
   id           Int           @id @default(autoincrement())
   email        String        @unique
   hash         String
+  department   String?
+  isActive     Boolean @default(true)
   hashedRt     String?
   name         String?
   role         Role
