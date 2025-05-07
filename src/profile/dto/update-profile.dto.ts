@@ -6,14 +6,17 @@ export class UpdateProfileDto {
     @IsString()
     name?: string;
 
+    @IsString()
+    department: string;
+
+    @IsOptional()
+    @IsString()
+    bio?: string;
+
     @IsOptional()
     @IsArray()
     @IsString({ each: true })
     skills?: string[]; // For STUDENT
-
-    @IsOptional()
-    @IsString()
-    bio?: string
 
     @IsOptional()
     @IsString()

@@ -14,6 +14,10 @@ export class ProfileService {
                 email: true,
                 name: true,
                 role: true,
+                department: true,
+                bio: true,
+                skills: true,
+                researchInterests: true
             },
         });
     }
