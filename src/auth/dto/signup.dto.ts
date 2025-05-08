@@ -1,6 +1,8 @@
-import { IsEmail, IsEnum, IsNotEmpty } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Role } from "@prisma/client";
 export class signupDto {
+
+    @IsString()
     name: string;
 
     @IsEmail()

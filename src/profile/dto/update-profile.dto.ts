@@ -1,10 +1,10 @@
-import { IsOptional, IsString, IsArray, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsArray, IsEnum, IsNotEmpty } from 'class-validator';
 import { Role } from '@prisma/client';
 
 export class UpdateProfileDto {
-    @IsOptional()
+
     @IsString()
-    name?: string;
+    name: string;
 
     @IsString()
     department: string;
